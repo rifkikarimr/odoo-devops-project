@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  db:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+  web:
+    image: odoo:13
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=odoo
+      - DB_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - ODOO_LONGPOLLING_PORT=8072
+      - ODOO_XMLRPC_PORT=8069
+      - ODOO_ADDONS_PATH=/mnt/extra-addons/
+    volumes:
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
